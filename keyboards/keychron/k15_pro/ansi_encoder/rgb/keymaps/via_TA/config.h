@@ -3,7 +3,7 @@
 
 /* Tien Anh add beg */
 #define TAPPING_TERM 200
-/*#define HOLD_ON_OTHER_KEY_PRESS*/
+#define HOLD_ON_OTHER_KEY_PRESS 1
 /* Tien Anh add end */
 
 #ifdef RGB_MATRIX_ENABLE
@@ -65,19 +65,14 @@ password=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
 git clone --recurse-submodules https://github.com/difficult-afternoon/qmk_firmware.git /d/Git_Work/Repo/K15_Pro
 qmk config user.keyboard=keychron/k15_pro/ansi_encoder/rgb
 
-** do everytime 
-dir /d/Git_Work/Repo
-
-
-
-
 *** To make firmware
 qmk compile -kb keychron/k15_pro/ansi_encoder/rgb -km via_TA
 
 *** To save to github
-user@computer:~$ git add .
-user@computer:~$ git commit -m "some note here"
-user@computer:~$ git push
+cd /d/Git_Work/Repo/K15_pro
+git add .
+git commit -m "some note here"
+git push
 
 *** To flash firmware:
 Full link: https://www.keychron.com/blogs/archived/k15-pro-factory-reset-and-firmware-flash

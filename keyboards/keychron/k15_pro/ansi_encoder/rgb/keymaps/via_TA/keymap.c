@@ -16,6 +16,8 @@
 
 #include QMK_KEYBOARD_H
 
+#define KC_CAD LALT(LCTL(KC_DEL))
+
 // Tap Dance - Begin
 	//Tap Dance Declarations
 	enum {
@@ -188,19 +190,19 @@
 		td_state = cur_dance(state);
 		switch (td_state) {
 			case TD_SINGLE_TAP:
-				SEND_STRING("Sonysony25"); wait_ms(50);
+				SEND_STRING(""); wait_ms(300);
 				tap_code16(KC_ENT);
 				reset_tap_dance(state);
 				break;
 			case TD_DOUBLE_TAP:
-				SEND_STRING("H842923");	wait_ms(50);
+				SEND_STRING("H842923");	; wait_ms(300);
 				tap_code16(KC_TAB); wait_ms(50);
-				SEND_STRING("Sonysony25"); wait_ms(50);
+				SEND_STRING(""); wait_ms(300);
 				tap_code16(KC_ENT);
 				reset_tap_dance(state);
 				break;
 			case TD_TRIPLE_TAP:
-				SEND_STRING("H842923");
+				SEND_STRING("H842923"); wait_ms(300);
 				tap_code16(KC_TAB);
 				reset_tap_dance(state);
 				break;
