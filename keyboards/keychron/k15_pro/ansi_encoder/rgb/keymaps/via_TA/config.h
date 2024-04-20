@@ -1,20 +1,10 @@
-/* Copyright 2023 @ Keychron (https://www.keychron.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #pragma once
+
+
+/* Tien Anh add beg */
+#define TAPPING_TERM 200
+/*#define HOLD_ON_OTHER_KEY_PRESS*/
+/* Tien Anh add end */
 
 #ifdef RGB_MATRIX_ENABLE
 /* RGB Matrix Driver Configuration */
@@ -55,5 +45,50 @@
         { 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14 }
 #endif
 
-/* Tien Anh add */
-#define TAPPING_TERM 200
+/* Note on QMK
+Fork keychron/qmk
+get 1 branch only
+
+*** Initial setup
+qmk config user.qmk_home=/d/Git_Work/Repo/K15_Pro
+user@computer:~$ git config --global user.email "woutcome@gmail.com"
+user@computer:~$ git config --global user.name "difficult-afternoon"
+user@computer:~$ git config --global http.postBuffer 157286400
+user@computer:~$ git config --global credential.helper store
+user@computer:~$ git credential approve
+<press Enter then copy below 4 rows>
+protocol=https
+host=github.com
+username=difficult-afternoon
+password=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
+<press Enter twice>
+git clone --recurse-submodules https://github.com/difficult-afternoon/qmk_firmware.git /d/Git_Work/Repo/K15_Pro
+qmk config user.keyboard=keychron/k15_pro/ansi_encoder/rgb
+
+** do everytime 
+dir /d/Git_Work/Repo
+
+
+
+
+*** To make firmware
+qmk compile -kb keychron/k15_pro/ansi_encoder/rgb -km via_TA
+
+*** To save to github
+user@computer:~$ git add .
+user@computer:~$ git commit -m "some note here"
+user@computer:~$ git push
+
+*** To flash firmware:
+Full link: https://www.keychron.com/blogs/archived/k15-pro-factory-reset-and-firmware-flash
+Step:
+ - Unplug the power cable from the keyboard.
+ - Open the QMK Toolbox.
+ - Slide the switch toggle on the side of the keyboard to "Off" and connect the USB cable. 
+ - Hold down the "Reset" button under the space bar, and then slide the toggle to "Cable".
+ - QMK Toolbox will display in yellow words "***DFU device connected".
+ 
+ 
+*** Link
+Tap dance: https://www.reddit.com/r/ploopy/comments/on2unc/tap_dance_examples_for_ploopy/
+*/
