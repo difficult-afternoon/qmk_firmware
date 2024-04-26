@@ -49,18 +49,21 @@
 Fork keychron/qmk
 get 1 branch only
 
+Get token
+https://github.com/settings/tokens/new
+
 *** Initial setup
 qmk config user.qmk_home=/d/Git_Work/Repo/K15_Pro
-user@computer:~$ git config --global user.email "woutcome@gmail.com"
-user@computer:~$ git config --global user.name "difficult-afternoon"
-user@computer:~$ git config --global http.postBuffer 157286400
-user@computer:~$ git config --global credential.helper store
-user@computer:~$ git credential approve
+git config --global user.email "woutcome@gmail.com"
+git config --global user.name "difficult-afternoon"
+git config --global http.postBuffer 157286400
+git config --global credential.helper store
+git credential approve
 <press Enter then copy below 4 rows>
 protocol=https
 host=github.com
 username=difficult-afternoon
-password=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
+password=insert_token_here
 <press Enter twice>
 git clone --recurse-submodules https://github.com/difficult-afternoon/qmk_firmware.git /d/Git_Work/Repo/K15_Pro
 qmk config user.keyboard=keychron/k15_pro/ansi_encoder/rgb
