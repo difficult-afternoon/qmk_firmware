@@ -14,17 +14,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+#define LAN_USER "H842923"
+#define LAN_PASS 
+
+
 #include QMK_KEYBOARD_H
 
-#define KC_CAD LALT(LCTL(KC_DEL))
 
 // Tap Dance - Begin
 	//Tap Dance Declarations
 	enum {
 	  TD_ESC_CAPS = 0
-	  ,TD_ALTTAB_CTRL // Single tap = Alt_Tab, Hold = Ctrl
-	  ,TD_CopyPaste // Single tap = Ctrl + V, Double tap = Ctrl + Shift + V, Triple = Ctrl + Alt + V; Hold = Ctrl + C
-	  ,TD_Password // Single: LAN ID Password then enter, Double = LAN ID H842923 then tab, Hold = Alt+Shift+1 (python handle , call Ark pass)
+	  ,TD_ALTTAB_CTRL // 1. Single tap = Alt_Tab, Hold = Ctrl
+	  ,TD_CopyPaste // 2. Single tap = Ctrl + V, Double tap = Ctrl + Shift + V (Copy value), Triple = Ctrl + Alt + V; Hold = Ctrl + C
+	  ,TD_Password // 3. Single: LAN ID Password then enter, Double = LAN ID H842923 then tab, Hold = Ctrl+Alt_Del
+	  ,TD_Replace_Bold // 4. Single: Ctrl+F, Double = Ctrl+H, Hold = Ctrl+B
+	  ,TD_Undo_Ctrl_A // 5. Single: Ctrl+Z, Double = Ctrl+Y, Hold = Ctrl+A
+	  ,TD_Python_Hotkey // 6. Single: Ctrl+Alt+1, Double = Ctrl+Alt+2, Triple = Ctrl+Alt+3
 	};
 
 	// Define a type containing as many tapdance states as you need
@@ -165,80 +172,109 @@
 				break;
 		}
 	}
-
-	void CopyPaste_reset(tap_dance_state_t *state, void *user_data) {
-		switch (td_state) {
-			case TD_SINGLE_TAP:
-				//unregister_code16(LCTL(KC_V));
-				break;
-			case TD_DOUBLE_TAP:
-				//unregister_code16(LSFT(LCTL(KC_V)));
-				break;
-			case TD_TRIPLE_TAP:
-				//unregister_code16(LCTL(LALT(KC_V)));
-				break;
-			case TD_SINGLE_HOLD:
-				//unregister_code16(LCTL(KC_C));
-				break;
-			default:
-				break;
-		}
-	}
-
+	
 	// Pair 3: Password
 	void Password_finished(tap_dance_state_t *state, void *user_data) {
 		td_state = cur_dance(state);
 		switch (td_state) {
 			case TD_SINGLE_TAP:
-				SEND_STRING(""); wait_ms(300);
+				SEND_STRING(LAN_PASS); wait_ms(300);
 				tap_code16(KC_ENT);
 				reset_tap_dance(state);
 				break;
 			case TD_DOUBLE_TAP:
-				SEND_STRING("H842923");	; wait_ms(300);
+				//tap_code16(LALT(LCTL(KC_DEL))); wait_ms(1000);
+				SEND_STRING(LAN_USER);	; wait_ms(300);
 				tap_code16(KC_TAB); wait_ms(50);
-				SEND_STRING(""); wait_ms(300);
+				SEND_STRING(LAN_PASS); wait_ms(300);
 				tap_code16(KC_ENT);
 				reset_tap_dance(state);
 				break;
 			case TD_TRIPLE_TAP:
-				SEND_STRING("H842923"); wait_ms(300);
+				SEND_STRING(LAN_USER); wait_ms(300);
 				tap_code16(KC_TAB);
 				reset_tap_dance(state);
 				break;
 			case TD_SINGLE_HOLD:
-				tap_code16(LCTL(LALT((KC_1))));
+				tap_code16(LCTL(LALT((KC_DEL))));
 				break;
 			default:
 				break;
 		}
 	}
 
-	void Password_reset(tap_dance_state_t *state, void *user_data) {
+	// TD 4: Replace_Bold
+	void Replace_Bold_finished(tap_dance_state_t *state, void *user_data) {
+		td_state = cur_dance(state);
 		switch (td_state) {
 			case TD_SINGLE_TAP:
-				//unregister_code16(LCTL(KC_V));
+				tap_code16(LCTL(KC_F));
+				reset_tap_dance(state);
 				break;
 			case TD_DOUBLE_TAP:
-				//unregister_code16(LSFT(LCTL(KC_V)));
-				break;
-			case TD_TRIPLE_TAP:
-				//unregister_code16(LSFT(LCTL(KC_V)));
+				tap_code16(LCTL(KC_H));
+				reset_tap_dance(state);
 				break;
 			case TD_SINGLE_HOLD:
-				//unregister_code16(LCTL(LALT((KC_1))));
+				tap_code16(LCTL(KC_B));
+				reset_tap_dance(state);
 				break;
 			default:
 				break;
 		}
 	}
-
+	
+	// TD 5: Undo_Ctrl_A
+	void Undo_Ctrl_A_finished(tap_dance_state_t *state, void *user_data) {
+		td_state = cur_dance(state);
+		switch (td_state) {
+			case TD_SINGLE_TAP:
+				tap_code16(LCTL(KC_Z));
+				reset_tap_dance(state);
+				break;
+			case TD_DOUBLE_TAP:
+				tap_code16(LCTL(KC_Y));
+				reset_tap_dance(state);
+				break;
+			case TD_SINGLE_HOLD:
+				tap_code16(LCTL(KC_A));
+				reset_tap_dance(state);
+				break;
+			default:
+				break;
+		}
+	}
+	
+	// TD 6: Python_Hotkey
+	void Python_Hotkey_finished(tap_dance_state_t *state, void *user_data) {
+		td_state = cur_dance(state);
+		switch (td_state) {
+			case TD_SINGLE_TAP:
+				tap_code16(LCTL(LALT(KC_1)));
+				reset_tap_dance(state);
+				break;
+			case TD_DOUBLE_TAP:
+				tap_code16(LCTL(LALT(KC_2)));
+				reset_tap_dance(state);
+				break;
+			case TD_TRIPLE_TAP:
+				tap_code16(LCTL(LALT(KC_3)));
+				reset_tap_dance(state);
+				break;
+			default:
+				break;
+		}
+	}
+	
 	//Tap Dance Definitions
 	tap_dance_action_t tap_dance_actions[] = {
 	  [TD_ESC_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS)
 	  ,[TD_ALTTAB_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ALTTAB_CTRL_finished, ALTTAB_CTRL_reset)
-	  ,[TD_CopyPaste] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, CopyPaste_finished, CopyPaste_reset)
-	  ,[TD_Password] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, Password_finished, Password_reset)
+	  ,[TD_CopyPaste] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, CopyPaste_finished, NULL)
+	  ,[TD_Password] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, Password_finished, NULL)
+	  ,[TD_Replace_Bold] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, Replace_Bold_finished, NULL)
+	  ,[TD_Undo_Ctrl_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, Undo_Ctrl_A_finished, NULL)
+	  ,[TD_Python_Hotkey] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, Python_Hotkey_finished, NULL)
 	};
 // Tap Dance - End
 
@@ -268,12 +304,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,    _______,  _______,            _______,  _______,  _______,             _______,            _______,            _______,            _______,  _______,  _______),
 
     [WIN_BASE] = LAYOUT_90_ansi(
-        KC_MUTE,    		KC_ESC,   			KC_F2,	KC_F4,    KC_F5,    KC_F9,    KC_F3,     KC_F6,    KC_F7,    KC_F8,    KC_F1,    KC_F10,   KC_F11,   KC_F12,   TD(TD_Password),		KC_DEL,
-        TD(TD_CopyPaste),	KC_GRV,   			KC_1,	KC_2,     KC_3,     KC_4,     KC_5,      KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,  KC_EQL,   KC_BSPC,				KC_PGUP,
-        MC_2,       		KC_TAB,   			KC_Q,	KC_W,     KC_E,     KC_R,     KC_T,      KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  KC_RBRC,  KC_BSLS,				KC_PGDN,
-        MC_3,       		TD(TD_ALTTAB_CTRL),	KC_A,	KC_S,     KC_D,     KC_F,     KC_G,      KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,            KC_ENT,				KC_HOME,
-        MC_4,				KC_LSFT,            KC_Z,	KC_X,     KC_C,     KC_V,      KC_B,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT,  KC_UP,
-        MC_5,				KC_LCTL,KC_LWIN,			KC_LALT,  KC_SPC,  MO(WIN_FN),           KC_SPC,             KC_RALT,            KC_RCTL,            KC_LEFT,  KC_DOWN,				KC_RGHT),
+        KC_MUTE,    		KC_ESC,   			KC_F2,	KC_F4,    KC_F5,    KC_F9,    KC_F3,     KC_F6,    KC_F7,    KC_F8,    KC_F1,    KC_F10,   KC_F11,   TD(TD_Python_Hotkey),	TD(TD_Password),	KC_END,
+        TD(TD_CopyPaste),	KC_DEL,   			KC_1,	KC_2,     KC_3,     KC_4,     KC_5,      KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,  KC_EQL,				KC_BSPC,			KC_PGUP,
+        TD(TD_Replace_Bold),KC_TAB,   			KC_Q,	KC_W,     KC_E,     KC_R,     KC_T,      KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  KC_RBRC,				KC_BSLS,			KC_PGDN,
+        TD(TD_Undo_Ctrl_A), TD(TD_ALTTAB_CTRL),	KC_A,	KC_S,     KC_D,     KC_F,     KC_G,      KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,							KC_ENT,				KC_HOME,
+        MC_4,				KC_LSFT,            KC_Z,	KC_X,     KC_C,     KC_V,      KC_B,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT,				KC_UP,
+        KC_GRV,				KC_ENT,KC_LWIN,			KC_LALT,  KC_SPC,  MO(WIN_FN),           KC_SPC,             KC_RALT,            KC_RCTL,            KC_LEFT,				KC_DOWN,			KC_RGHT),
 
     [WIN_FN] = LAYOUT_90_ansi(
         RGB_TOG,    _______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,   RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,   KC_VOLU,  _______,            _______,
@@ -288,7 +324,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [MAC_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [MAC_FN]   = { ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
-    [WIN_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [WIN_BASE] = { ENCODER_CCW_CW(KC_PGDN, KC_PGUP) },
     [WIN_FN]   = { ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
 };
 #endif // ENCODER_MAP_ENABLE
